@@ -1,0 +1,83 @@
+from tkinter import *
+import parser
+
+
+root = Tk()
+
+root.title("Calculator")
+
+display = Entry(root, font=("Calibri 20"))
+display.grid(row=1, columnspan=6, sticky=W+E, padx = 50, pady = 5)
+
+i = 0
+
+def GetNumbers(n):
+    global i
+    display.insert(i, n)
+    i+=1
+
+def GetOperation(operator):
+    global i
+    OperatorLength= len(operator)
+    display.insert(i, operator)
+    i+=OperatorLength
+
+def ClearDisplay():
+    display.delete(0, END)
+
+def Undo():
+    DisplayState = display.get()
+    if len(DisplayState):
+        DisplayNewState = DisplayState[:-1]
+        ClearDisplay()
+        display.insert(0, DisplayNewState)
+    else:
+        ClearDisplay()
+        display.insert(0, "Error")
+
+def Calculate():
+    DisplayState =display.get()
+    try:
+        MathExpression = parser.expr(DisplayState).compile()
+        Result = eval(MathExpression)
+        ClearDisplay()
+        display.insert(0, Result)
+    except expression as identifier:
+        ClearDisplay()
+        display.insert(0, "Error")
+
+
+
+
+
+#Numeric Buttons
+Button(root, text="1", width = 5, height = 2, command=lambda:GetNumbers(1)).grid(row=2, column=0, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="2", width = 5, height = 2,command=lambda:GetNumbers(2)).grid(row=2, column=1, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="3", width = 5, height = 2,command=lambda:GetNumbers(3)).grid(row=2, column=2, sticky=W+E, padx = 5, pady = 5)
+
+Button(root, text="4", width = 5, height = 2,command=lambda:GetNumbers(4)).grid(row=3, column=0, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="5", width = 5, height = 2,command=lambda:GetNumbers(5)).grid(row=3, column=1, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="6", width = 5, height = 2,command=lambda:GetNumbers(6)).grid(row=3, column=2, sticky=W+E, padx = 5, pady = 5)
+
+Button(root, text="7", width = 5, height = 2,command=lambda:GetNumbers(7)).grid(row=4, column=0, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="8", width = 5, height = 2,command=lambda:GetNumbers(8)).grid(row=4, column=1, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="9", width = 5, height = 2,command=lambda:GetNumbers(9)).grid(row=4, column=2, sticky=W+E, padx = 5, pady = 5)
+
+#Buttons Part 2
+Button(root, text="AC", width = 5, height = 2,command=lambda:ClearDisplay()).grid(row=5, column=0, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="0", width = 5, height = 2,command=lambda:GetNumbers(0)).grid(row=5, column=1, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="%", width = 5, height = 2,command=lambda:GetOperation("%")).grid(row=5, column=2, sticky=W+E, padx = 5, pady = 5)
+
+Button(root, text="+", width = 5, height = 2,command=lambda:GetOperation("+")).grid(row=2, column=3, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="-", width = 5, height = 2,command=lambda:GetOperation("-")).grid(row=3, column=3, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="*", width = 5, height = 2,command=lambda:GetOperation("*")).grid(row=4, column=3, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="/", width = 5, height = 2,command=lambda:GetOperation("/")).grid(row=5, column=3, sticky=W+E, padx = 5, pady = 5)
+
+Button(root, text="<-", width = 5, height = 2,command=lambda:Undo()).grid(row=2, column=4, sticky=W+E, columnspan=2, padx = 5, pady = 5)
+Button(root, text="exp", width = 5, height = 2,command=lambda:GetOperation("**")).grid(row=3, column=4, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="**2", width = 5, height = 2,command=lambda:GetOperation("**2")).grid(row=3, column=5, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="(", width = 5, height = 2,command=lambda:GetOperation("(")).grid(row=4, column=4, sticky=W+E, padx = 5, pady = 5)
+Button(root, text=")", width = 5, height = 2,command=lambda:GetOperation(")")).grid(row=4, column=5, sticky=W+E, padx = 5, pady = 5)
+Button(root, text="=", width = 5, height = 2,command=lambda:Calculate()).grid(row=5, column=4, sticky=W+E, columnspan=2, padx = 5, pady = 5)
+
+root.mainloop()
